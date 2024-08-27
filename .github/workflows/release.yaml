@@ -88,6 +88,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Set toolchain
+        run: rustup default stable-x86_64-pc-windows-gnu
+
       - name: Create .exe file
         run: cd myceliumd && cargo build --release && cd ..
 
@@ -117,4 +120,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          asset_paths: '["mycelium_installer.msi"]'
+          asset_paths: '["mycelium_installer.msi", "myceliumd/target/release/mycelium.exe"]'
