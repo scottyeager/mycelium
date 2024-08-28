@@ -24,29 +24,26 @@ jobs:
     strategy:
       matrix:
         include:
-          - target: aarch64-apple-darwin
-            os: macos-latest
-          - target: x86_64-unknown-linux-musl
+#          - target: aarch64-apple-darwin
+#            os: macos-latest
+#          - target: x86_64-unknown-linux-musl
+#            os: ubuntu-latest
+#          - target: x86_64-apple-darwin
+#            os: macos-latest
+#          - target: aarch64-unknown-linux-musl
+#            os: ubuntu-latest
+          - target: x86_64-pc-windows-gnu
             os: ubuntu-latest
-          - target: x86_64-apple-darwin
-            os: macos-latest
-          - target: aarch64-unknown-linux-musl
-            os: ubuntu-latest
+
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: taiki-e/upload-rust-binary-action@v1
+      - uses: rust-build/rust-build.action@v1.4.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # Name of the compiled binary, also name of the non-extension part of the produced file
-          bin: mycelium
-          # --target flag value, default is host
-          target: ${{ matrix.target }}
-          # Name of the archive when uploaded
-          archive: $bin-$target
-          # (required) GitHub token for uploading assets to GitHub Releases.
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # Specify manifest since we are in a subdirectory
-          manifest-path: myceliumd/Cargo.toml
+          RUSTTARGET: ${{ matrix.target }}
+          SRC_DIR: myceliumd
 
   # TODO: Figure out the correct matrix setup to have this in a single action
   upload-assets-myceliumd-private:
